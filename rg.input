@@ -1,0 +1,8 @@
+! Input file for structure_factor.f90
+
+dump.prod.lammpstrj
+masses.in           File for masses (0 calculates the unweighted rg).
+0                             Skip frames
+500                           Last frame (inclusive), 0 calculates all frames.
+14                              TOTAL number of atom types.
+1,2,3,4,5,6,7,8,9,13,14                 Atom types to include in the calculation (comma delimited integers).
