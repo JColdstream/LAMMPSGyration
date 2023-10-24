@@ -33,7 +33,6 @@ enddo
 ! enddo
 
 write(*, *) 'Final frame: ', frame-1
-!call structure_output
 
 contains
 
@@ -248,10 +247,6 @@ subroutine comrg
   !!! https://www.intel.com/content/www/us/en/docs/onemkl/code-samples-lapack/2022-1/dsyev-example-fortran.html !!!
 
   ! LAPACK ARGUMENTS
-  ! integer:: LDA
-  ! PARAMETER:: LDA = 3
-  ! integer:: LWMAX
-  ! PARAMETER:: LWMAX = 1000
 
   integer:: LWORK, INFO
   ! 1000 is max length of work array
@@ -272,7 +267,7 @@ subroutine comrg
       rg = rg + ( mass(atomtype(mol))*( atom(i, mol) )**2 )
     enddo
 
-    ! calculates the inertia tensor
+    ! calculates the inertia tensor using the dot product, and the outer product
     dotprod = dot_product( atom(:,mol), atom(:,mol) )
 
     do i = 1, 3
@@ -284,19 +279,6 @@ subroutine comrg
         endif
       enddo
     enddo
-
-    ! outerprod = 0.0
-
-    ! do i = 1, 3
-    !   do j = 1, 3
-    !     outerprod(i, j) = atom(i, mol)*atom(j, mol)
-    !     if (i .eq. j) then
-    !       itensor(i, j) = itensor(i, j) + mass(atomtype(mol)) * ( dotprod-outerprod(i, j) )
-    !     else
-    !       itensor(i, j) = itensor(i, j) - mass(atomtype(mol)) * outerprod(i, j)
-    !     endif
-    !   enddo
-    ! enddo
 
   enddo
 
@@ -322,10 +304,6 @@ subroutine comrg
   ellipseaxes(3) = c
 
   testrg = sqrt( ( a**2+b**2+c**2 ) / 5 )
-  !write(*,*) testrg
-  !write(*,*) a, b, c
-
-  ! write(*, *) 'Rg =', dsqrt(rg/masstotal)
 
   ! convert to ratios instead of absolute values
   minaxis = minloc(ellipseaxes, 1)
@@ -362,15 +340,6 @@ subroutine comrg
   rgnrm = rgnrm+1.0_dp
           
 end subroutine comrg
-
-subroutine structure_output
-  integer(4):: iq
-  ! Writes q and p(q) to file
-  open(unit = 101, file='formfactor.out', status='unknown')
-  do iq = 1, nq+1
-    !write(101, *) q(iq), p(iq)/dble(scattering_sum)**2/pqnrm
-  enddo
-end subroutine structure_output
 
 function string_to_integers(str, sep) result(a)
     integer, allocatable:: a(:)
