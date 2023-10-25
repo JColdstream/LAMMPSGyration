@@ -334,7 +334,7 @@ subroutine comrg
   endif
       
 
-  write(102, *) timestep, dsqrt(testrg/masstotal)
+  write(102, *) timestep, testrg
   write(104, *) timestep, a, b, c
 
   rgnrm = rgnrm+1.0_dp
